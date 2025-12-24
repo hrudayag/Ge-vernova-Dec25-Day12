@@ -2,22 +2,39 @@ public class MoodAnalyser {
     private String message;
     public MoodAnalyser() {
     }
+
     public MoodAnalyser(String message) {
         this.message = message;
     }
-    public String analyseMood() {
+
+    public String analyseMood() throws MoodAnalysisException {
         try {
+            if (message.length() == 0) {
+                throw new MoodAnalysisException(
+                        MoodAnalysisException.ExceptionType.EMPTY_MOOD,
+                        "Mood is Empty"
+                );
+            }
+
             if (message.contains("Sad")) {
                 return "SAD";
             }
-        } catch (NullPointerException e) {
             return "HAPPY";
+
+        } catch (NullPointerException e) {
+            throw new MoodAnalysisException(
+                    MoodAnalysisException.ExceptionType.NULL_MOOD,
+                    "Mood is Null"
+            );
         }
-        return "HAPPY";
     }
 
     public static void main(String[] args) {
-        MoodAnalyser nullMood = new MoodAnalyser(null);
-        System.out.println(nullMood.analyseMood());
+        try {
+            MoodAnalyser analyser = new MoodAnalyser("");
+            System.out.println(analyser.analyseMood());
+        } catch (MoodAnalysisException e) {
+            System.out.println(e.type + " : " + e.getMessage());
+        }
     }
 }
